@@ -62,7 +62,7 @@ def add_to_chroma(chunks: list[Document]):
 
     existing_items = db.get(include=[])
     existing_ids = set(existing_items["ids"])
-    print(f"Existing Items in DB : {len(existing_ids)}")
+    existing = f"Existing Items in DB : {len(existing_ids)}"
 
     new = []
     for chunk in chunk_ids:
@@ -70,16 +70,23 @@ def add_to_chroma(chunks: list[Document]):
             new.append(chunk)
 
     if len(new) != 0:
-        print(f"{len(new)} New chunks Added")
+        new_chunks_added = f"{len(new)} New chunks Added"
         new_chunk_ids = [chunk.metadata["id"] for chunk in new]
         db.add_documents(new, ids=new_chunk_ids)
+        total = f"Total Items in DB : {len(existing_ids)}"
+        output = f"{existing}\n\n{new_chunks_added}\n\n{total}"
     else:
         print("No New Documents to add")
         existing_items = db.get(include=[])
         existing_ids = set(existing_items["ids"])
-        print(f"Total Items in DB : {len(existing_ids)}")
+        total = f"Total Items in DB : {len(existing_ids)}"
+        output = f"{existing}\n\nNo New Documents to Add\n\n{total}"
+
+    return output
 
 
-docs = load_documents()
-chunks = split_docs(docs)
-add_to_chroma(chunks)
+def check_and_load_documents():
+    docs = load_documents()
+    chunks = split_docs(docs)
+    data = add_to_chroma(chunks)
+    return data

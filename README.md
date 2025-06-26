@@ -2,13 +2,8 @@
 
 A RAG chatbot for tvs, which will answer customer queries related to these vehicles based on the information provided
 
-### To run the chatbot
-
+### To run the chatbot, add necessary files to data file
+### Then:
 ```bash
-# add files necessary in data folder
-python loader.py
-```
-
-```bash
-python chatbot.py
+streamlit run chatbot.py
 ```
