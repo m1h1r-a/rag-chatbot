@@ -4,8 +4,8 @@ from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_ollama import OllamaEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-DATA_PATH = "/home/m1h1r/Documents/[2] dev/tvs-chatbot/data"
-CHROMA_PATH = "/home/m1h1r/Documents/[2] dev/tvs-chatbot/chroma"
+DATA_PATH = "data"
+CHROMA_PATH = "chroma"
 
 
 def load_documents():
@@ -34,6 +34,7 @@ def calculate_chunk_ids(chunks):
     for chunk in chunks:
 
         source = chunk.metadata.get("source")
+        # print(source)
         page = chunk.metadata.get("page")
         cur_id = f"{source}:{page}"
         # print(cur_id, "\n")
@@ -76,7 +77,6 @@ def add_to_chroma(chunks: list[Document]):
         total = f"Total Items in DB : {len(existing_ids)}"
         output = f"{existing}\n\n{new_chunks_added}\n\n{total}"
     else:
-        print("No New Documents to add")
         existing_items = db.get(include=[])
         existing_ids = set(existing_items["ids"])
         total = f"Total Items in DB : {len(existing_ids)}"
