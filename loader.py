@@ -42,19 +42,46 @@ def calculate_chunk_ids(chunks):
 
         if cur_id == prev_id or prev_id == None:
             final_id = f"{cur_id}:{chunk_index}"
-            print(f"{final_id}\n")
+            # print(f"{final_id}\n")
             chunk_index += 1
             prev_id = cur_id
+
         else:
             chunk_index = 0
             final_id = f"{cur_id}:{chunk_index}"
-            print(f"{final_id}\n")
+            # print(f"{final_id}\n")
             chunk_index += 1
             prev_id = cur_id
         chunk.metadata["id"] = final_id
     return chunks
 
 
+def add_to_chroma(chunks: list[Document]):
+    db = Chroma(
+        persist_directory=CHROMA_PATH, embedding_function=get_embedding_function()
+    )
+    chunk_ids = calculate_chunk_ids(chunks)
+
+    existing_items = db.get(include=[])
+    existing_ids = set(existing_items["ids"])
+    print(f"Existing Items in DB : {len(existing_ids)}")
+
+    new = []
+    for chunk in chunk_ids:
+        if chunk.metadata["id"] not in existing_ids:
+            new.append(chunk)
+
+    if len(new) != 0:
+        print(f"{len(new)} New chunks Added")
+        new_chunk_ids = [chunk.metadata["id"] for chunk in new]
+        db.add_documents(new, ids=new_chunk_ids)
+    else:
+        print("No New Documents to add")
+        existing_items = db.get(include=[])
+        existing_ids = set(existing_items["ids"])
+        print(f"Total Items in DB : {len(existing_ids)}")
+
+
 docs = load_documents()
 chunks = split_docs(docs)
-chunks = calculate_chunk_ids(chunks)
+add_to_chroma(chunks)
