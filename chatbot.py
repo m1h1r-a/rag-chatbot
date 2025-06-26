@@ -76,7 +76,7 @@ with col1:
 
 with col2:
     if st.button("Check for new Documents"):
-        data, sources = check_and_load_documents()
+        data = check_and_load_documents()
         show_dialog(data)
 
 with col3:
