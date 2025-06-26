@@ -1,9 +1,7 @@
-import langchain
-from langchain.document_loaders.pdf import PyPDFDirectoryLoader
 from langchain.schema.document import Document
-from langchain.vectorstores.chroma import Chroma
-from langchain_community.embeddings.ollama import OllamaEmbeddings
-from langchain_core import embeddings
+from langchain_chroma import Chroma
+from langchain_community.document_loaders import PyPDFDirectoryLoader
+from langchain_ollama import OllamaEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 DATA_PATH = "/home/m1h1r/Documents/[2] dev/tvs-chatbot/data"
